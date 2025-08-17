@@ -59,3 +59,45 @@ def subset_x_y(target, features, start_index: int, end_index: int):
         Subsetted Pandas dataframe containing the target
     """
     return features[start_index:end_index], target[start_index:end_index]
+
+import pandas as pd
+
+def split_sets_by_time(df: pd.DataFrame, target_col: str, test_ratio: float = 0.2):
+    """
+    Split an ordered dataframe into train/val/test blocks by index.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input dataframe (already sorted by time).
+    target_col : str
+        Name of the target column.
+    test_ratio : float, default 0.2
+        Fraction used for BOTH validation and test sets (train gets the rest).
+
+    Returns
+    -------
+    X_train, y_train, X_val, y_val, X_test, y_test : pd.DataFrame/pd.Series
+    """
+    if not (0 < test_ratio < 0.5):
+        raise ValueError("test_ratio must be in (0, 0.5) because val and test both use this ratio.")
+
+    df_copy = df.copy()
+    y = df_copy.pop(target_col)
+
+    n = len(df_copy)
+    if n < 5:
+        raise ValueError("Dataframe too small to split by time (need at least 5 rows).")
+
+    # Number of rows for each of val and test
+    cutoff = int(round(n * test_ratio))
+    if cutoff == 0:
+        cutoff = 1  # ensure at least 1 row for val/test when n is small
+
+    # Train: [0 : n - 2*cutoff), Val: [n - 2*cutoff : n - cutoff), Test: [n - cutoff : n)
+    X_train, y_train = subset_x_y(target=y, features=df_copy, start_index=0,          end_index=n - 2*cutoff)
+    X_val,   y_val   = subset_x_y(target=y, features=df_copy, start_index=n - 2*cutoff, end_index=n - cutoff)
+    X_test,  y_test  = subset_x_y(target=y, features=df_copy, start_index=n - cutoff,   end_index=n)
+
+    return X_train, y_train, X_val, y_val, X_test, y_test
+
