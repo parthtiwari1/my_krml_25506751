@@ -36,3 +36,26 @@ def load_sets(path='../data/processed/'):
     y_test  = np.load(f'{path}y_test.npy' , allow_pickle=True) if os.path.isfile(f'{path}y_test.npy')  else None
 
     return X_train, y_train, X_val, y_val, X_test, y_test
+    
+def subset_x_y(target, features, start_index: int, end_index: int):
+    """Keep only the rows for X and y (optional) sets from the specified indexes
+
+    Parameters
+    ----------
+    target : pd.DataFrame
+        Dataframe containing the target
+    features : pd.DataFrame
+        Dataframe containing all features
+    start_index : int
+        Index of the starting observation
+    end_index : int
+        Index of the ending observation
+
+    Returns
+    -------
+    pd.DataFrame
+        Subsetted Pandas dataframe containing the features
+    pd.DataFrame
+        Subsetted Pandas dataframe containing the target
+    """
+    return features[start_index:end_index], target[start_index:end_index]
