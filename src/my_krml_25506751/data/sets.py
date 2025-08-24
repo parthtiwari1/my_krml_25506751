@@ -140,3 +140,26 @@ def split_sets_random(features, target, test_ratio=0.2):
 
     return X_train, y_train, X_val, y_val, X_test, y_test
 
+def split_sets_random_stratified(features: pd.DataFrame, target: pd.Series, test_ratio: float = 0.2) -> tuple:
+    """Split sets randomly with stratification (for classification tasks)."""
+    val_ratio = test_ratio / (1 - test_ratio)
+    X_data, X_test, y_data, y_test = train_test_split(
+        features, target, test_size=test_ratio, random_state=8, stratify=target
+    )
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_data, y_data, test_size=val_ratio, random_state=8, stratify=y_data
+    )
+    return X_train, y_train, X_val, y_val, X_test, y_test
+
+def load_data(file_path: str, index_col: str = None) -> pd.DataFrame:
+    """Load data from a CSV file into a Pandas dataframe."""
+    return pd.read_csv(file_path, index_col=index_col)
+
+def to_numpy_arrays(X: pd.DataFrame, y: pd.Series = None) -> tuple:
+    """Convert dataframe and series to numpy arrays."""
+    X_np = X.to_numpy()
+    if y is not None:
+        y_np = y.to_numpy()
+        return X_np, y_np
+    return X_np
+

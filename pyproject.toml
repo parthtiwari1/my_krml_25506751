@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "my_krml_25506751"
-version = "2025.0.1.1"
+version = "2025.0.3.0"
 description = "A small ML utilities package for data processing and evaluation."
 authors = ["Parth T"]
 license = "None"
