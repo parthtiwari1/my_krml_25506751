@@ -1,4 +1,3 @@
-# New recommended file: src/my_krml_25506751/models/train.py
 
 import numpy as np
 from sklearn.linear_model import LinearRegression

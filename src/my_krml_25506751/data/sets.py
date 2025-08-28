@@ -139,8 +139,8 @@ def split_sets_random(features, target, test_ratio=0.2):
     )
 
     return X_train, y_train, X_val, y_val, X_test, y_test
-
 def split_sets_random_stratified(features: pd.DataFrame, target: pd.Series, test_ratio: float = 0.2) -> tuple:
+    from sklearn.model_selection import train_test_split  
     """Split sets randomly with stratification (for classification tasks)."""
     val_ratio = test_ratio / (1 - test_ratio)
     X_data, X_test, y_data, y_test = train_test_split(
